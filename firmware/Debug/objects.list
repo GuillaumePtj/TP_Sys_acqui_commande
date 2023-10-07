@@ -1,6 +1,7 @@
 "./Core/Src/adc.o"
 "./Core/Src/gpio.o"
 "./Core/Src/main.o"
+"./Core/Src/shell.o"
 "./Core/Src/stm32g4xx_hal_msp.o"
 "./Core/Src/stm32g4xx_hal_timebase_tim.o"
 "./Core/Src/stm32g4xx_it.o"

@@ -22,11 +22,12 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
-#include "stm32g4xx_hal.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <string.h>
+#include <stdio.h>
+#include "shell.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -96,22 +97,24 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
+  //HAL_UART_Transmit(&huart2, "___RESET___\r\n", 13, HAL_MAX_DELAY);
 
+  Shell_Init();
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  	//HAL_UART_Transmit_IT(&huart2, "Hello World\r\n", 13); Cette fonction permet d'afficher "Hello world" à l'interruption de l'USART 2
-		//HAL_UART_Receive(&huart2, rx_buffer, 1, 1000);
-		//HAL_UART_Transmit(&huart2, rx_buffer, 1, 1000);
-	  HAL_UART_RxCpltCallback(&huart2);
-	  HAL_Delay(1000);
+	  Shell_Loop();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
+
   /* USER CODE END 3 */
 }
 
@@ -161,26 +164,13 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if (huart == &huart2)
+/*void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{if (huart == &huart2)
   {
     // Code à exécuter à chaque interruption de réception USART2
-    char message[] = "Hello world\r\n";
-
     HAL_UART_Receive_IT(&huart2, rx_buffer, 1);
-
-    if(rx_buffer[0]=='a')
-    {
-    	HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
-    }
-    else
-    {
-    	HAL_UART_Transmit(&huart2, "Erreur\r\n", 8, HAL_MAX_DELAY);
-    }
-
   }
-}
+}*/
 /* USER CODE END 4 */
 
 /**

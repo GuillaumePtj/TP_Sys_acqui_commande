@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (10.3-2021.10)
+# Toolchain: GNU Tools for STM32 (11.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -60,8 +60,8 @@ all: main-build
 main-build: NUCLEO-G474RET6-Inverter_Pinout.elf secondary-outputs
 
 # Tool invocations
-NUCLEO-G474RET6-Inverter_Pinout.elf NUCLEO-G474RET6-Inverter_Pinout.map: $(OBJS) $(USER_OBJS) C:\Users\Guillaume\Desktop\MSC\TP1\ acquisition\ et\ commande\NUCLEO-G474RET6-Inverter_Pinout\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "NUCLEO-G474RET6-Inverter_Pinout.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\Guillaume\Desktop\MSC\TP1 acquisition et commande\NUCLEO-G474RET6-Inverter_Pinout\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-G474RET6-Inverter_Pinout.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+NUCLEO-G474RET6-Inverter_Pinout.elf NUCLEO-G474RET6-Inverter_Pinout.map: $(OBJS) $(USER_OBJS) C:\Users\grego\STM32CubeIDE\workspace_1.13.1\NUCLEO-G474RET6-Inverter_Pinout\STM32G474RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "NUCLEO-G474RET6-Inverter_Pinout.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\grego\STM32CubeIDE\workspace_1.13.1\NUCLEO-G474RET6-Inverter_Pinout\STM32G474RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="NUCLEO-G474RET6-Inverter_Pinout.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
