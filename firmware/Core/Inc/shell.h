@@ -18,6 +18,6 @@
 
 void Shell_Init(void);
 void Shell_Loop(void);
-int verifSpeed (int a);
+extern int SpeedValue;
 
 #endif /* INC_MYLIBS_SHELL_H_ */

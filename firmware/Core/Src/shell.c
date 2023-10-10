@@ -8,6 +8,8 @@
 #include "shell.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include "motor.h"
 
 uint8_t prompt[]="user@Nucleo-STM32G474RET6>>"; //Contenant le prompt comme sur un shell linux
 uint8_t started[]=
@@ -63,6 +65,8 @@ char* 		argv[MAX_ARGS];
 int		 	argc = 0;
 char*		token;
 int 		newCmdReady = 0;
+int 		Speed_Value;
+
 
 void Shell_Init(void){
 	memset(argv, NULL, MAX_ARGS*sizeof(char*));
@@ -76,9 +80,6 @@ void Shell_Init(void){
 }
 
 void Shell_Loop(void){
-	int a = 0.5;
-	int b;
-
 	if(uartRxReceived){
 		switch(uartRxBuffer[0]){
 		case ASCII_CR: // Nouvelle ligne, instruction à traiter
@@ -110,8 +111,8 @@ void Shell_Loop(void){
 			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
 		}
 		else if(strcmp(argv[0],"help")==0){
-			//int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE, "Print all available functions here\r\n");
-			//HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+			int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE, "Print all available functions here\r\n");
+			HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 			HAL_UART_Transmit(&huart2, help, sizeof(help), HAL_MAX_DELAY);
 		}
 		else if(strcmp(argv[0],"pinout")==0){
@@ -125,7 +126,9 @@ void Shell_Loop(void){
 		}
 		else if(strcmp(argv[0],"speed")==0){
 					HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
-					//fonction détection de carac asciitointeger
+					SpeedValue = atoi(argv[1]); //fonction détection de carac asciitointeger
+					Motor_Loop();
+					// appel de fonction de moteur.c
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
@@ -141,15 +144,3 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart){
 	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
 }
 
-int verifSpeed (int a)
-{
-	if (a>1)
-	{
-		HAL_UART_Transmit(&huart2, "Error\r\n", 7, HAL_MAX_DELAY);
-		return 0;
-	}
-	else
-	{
-		return 1;
-	}
-}

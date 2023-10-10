@@ -28,6 +28,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "shell.h"
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,7 +47,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -59,7 +59,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-uint8_t rx_buffer[1]; // Buffer pour stocker le caractere reçu
+int SpeedValue=0.5;
 /* USER CODE END 0 */
 
 /**
@@ -168,16 +168,7 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-void HAL_UART_RxCpltCallback (UART_HandleTypeDef * huart){
-	uartRxReceived = 1;
-	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
-}
 
-a = HAL_UART_Receive(&huart2, uartRxBuffer, 1, HAL_MAX_DELAY);
-b = verifSpeed(a);
-if(b == 1){
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, a*2832);
-	__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_2, (1-a)*2832);}
 
 /* USER CODE END 4 */
 

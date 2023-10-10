@@ -1,0 +1,2 @@
+../Core/Src/motor.c:15:5:verifSpeed	16	static
+../Core/Src/motor.c:30:5:Motor_Loop	4	static
