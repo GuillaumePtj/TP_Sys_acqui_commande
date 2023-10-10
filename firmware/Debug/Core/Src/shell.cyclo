@@ -1,3 +1,4 @@
-../Core/Src/shell.c:64:6:Shell_Init	1
-../Core/Src/shell.c:75:6:Shell_Loop	11
-../Core/Src/shell.c:128:6:HAL_UART_RxCpltCallback	1
+../Core/Src/shell.c:67:6:Shell_Init	1
+../Core/Src/shell.c:78:6:Shell_Loop	12
+../Core/Src/shell.c:139:6:HAL_UART_RxCpltCallback	1
+../Core/Src/shell.c:144:5:verifSpeed	2

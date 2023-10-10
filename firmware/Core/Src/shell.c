@@ -25,25 +25,25 @@ uint8_t uartTxBuffer[UART_TX_BUFFER_SIZE]; //buffer d'émission des données de 
 
 char cmd[CMD_BUFFER_SIZE]; //Contenant la commande en cours
 int idxCmd; //Contenant l'index du prochain caractère à remplir
-const uint8_t help[]="\r\nVoici les fonctions disponibles : "
+const uint8_t help[]="\r\nVoici les fonctions disponibles : \r\n"
 					"\r\n pinout : affiche toutes les broches connectees et leur fonction"
 					"\r\n start : allume l'etage de puissance du moteur"
 					"\r\n stop : eteint l'etage de puissance du moteur"
 					"\r\n"
 					"\r\n"; //Contenant le message d'aide, la liste des fonctions
-const uint8_t pinout[]="\r\nVoici la liste des pin utilisees : "
-					"\r\n PA10 : W_PWM_H"
-					"\r\n PA9 : V_PWM_H"
-					"\r\n PA8 : U_PWM_H"
-					"\r\n PB15 : W_PWM_L"
-					"\r\n PB14 : V_PWM_L"
-					"\r\n PB13 : U_PWM_L"
-					"\r\n PC0 : U_VPh"
-					"\r\n PC1 : W_VPh"
-					"\r\n PC3 : V_VPh"
-					"\r\n PC2 : Bus_Imes"
-					"\r\n PA0 : Bus_V"
-					"\r\n PA1 : U_Imes"
+const uint8_t pinout[]="\r\nVoici la liste des pin utilisees : \r\n"
+					"\r\n - PA10 : W_PWM_H"
+					"\r\n - PA9 : V_PWM_H"
+					"\r\n - PA8 : U_PWM_H \r\n"
+					"\r\n - PB15 : W_PWM_L"
+					"\r\n - PB14 : V_PWM_L"
+					"\r\n - PB13 : U_PWM_L \r\n"
+					"\r\n - PC0 : U_VPh"
+					"\r\n - PC1 : W_VPh"
+					"\r\n - PC3 : V_VPh \r\n"
+					"\r\n - PC2 : Bus_Imes"
+					"\r\n - PA0 : Bus_V"
+					"\r\n - PA1 : U_Imes"
 					"\r\n"
 					"\r\n"; //Contenant la liste des pin utilisées
 const uint8_t powerOn[]="\r\nPower ON"
@@ -52,6 +52,9 @@ const uint8_t powerOn[]="\r\nPower ON"
 const uint8_t powerOff[]="\r\nPower OFF"
 					"\r\n"
 					"\r\n"; //Contenant le message d'extinction du moteur
+const uint8_t speed[]="\r\nLe moteur va tourner a la vitesse demandee"
+					"\r\n"
+					"\r\n"; //en pourcentage
 
 
 char	 	cmdBuffer[CMD_BUFFER_SIZE];
@@ -73,6 +76,9 @@ void Shell_Init(void){
 }
 
 void Shell_Loop(void){
+	int a = 0.5;
+	int b;
+
 	if(uartRxReceived){
 		switch(uartRxBuffer[0]){
 		case ASCII_CR: // Nouvelle ligne, instruction à traiter
@@ -104,8 +110,8 @@ void Shell_Loop(void){
 			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
 		}
 		else if(strcmp(argv[0],"help")==0){
-			int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE, "Print all available functions here\r\n");
-			HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+			//int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE, "Print all available functions here\r\n");
+			//HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 			HAL_UART_Transmit(&huart2, help, sizeof(help), HAL_MAX_DELAY);
 		}
 		else if(strcmp(argv[0],"pinout")==0){
@@ -117,15 +123,33 @@ void Shell_Loop(void){
 		else if(strcmp(argv[0],"stop")==0){
 					HAL_UART_Transmit(&huart2, powerOff, sizeof(powerOff), HAL_MAX_DELAY);
 		}
+		else if(strcmp(argv[0],"speed")==0){
+					HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
+					//fonction détection de carac asciitointeger
+		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
 		}
 		HAL_UART_Transmit(&huart2, prompt, sizeof(prompt), HAL_MAX_DELAY);
 		newCmdReady = 0;
 	}
+
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef * huart){
 	uartRxReceived = 1;
 	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
+}
+
+int verifSpeed (int a)
+{
+	if (a>1)
+	{
+		HAL_UART_Transmit(&huart2, "Error\r\n", 7, HAL_MAX_DELAY);
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
 }
