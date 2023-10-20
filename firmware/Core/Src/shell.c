@@ -58,6 +58,9 @@ const uint8_t powerOff[]="\r\nPower OFF"
 const uint8_t speed[]="\r\nLe moteur va atteindre la vitesse demandee. "
 					"\r\n"
 					"\r\n"; //en pourcentage
+const uint8_t current[]="\r\nLe courant est :  "
+					"\r\n"
+					"\r\n"; //en pourcentage
 
 
 char	 	cmdBuffer[CMD_BUFFER_SIZE];
@@ -68,6 +71,8 @@ char*		token;
 int 		newCmdReady = 0;
 int 		Speed_Value;
 float       duty_rapport = 0;
+char 		message[50];
+
 
 
 void Shell_Init(void){
@@ -130,7 +135,13 @@ void Shell_Loop(void){
 		}
 		else if(strcmp(argv[0],"speed")==0){
 			HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
+			sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
+			HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+
 			motor_set_speed(atoi(argv[1]));
+		}
+		else if(strcmp(argv[0],"current")==0){
+			current_Mesure();
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);

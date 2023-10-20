@@ -5,6 +5,7 @@
  *      Author: grego
  */
 
+#include "adc.h"
 #include "usart.h"
 #include "motor.h"
 #include <stdio.h>
@@ -13,6 +14,8 @@
 #include "tim.h"
 
 Moteur motor;
+uint32_t adc_value = 0;
+char courant[50];
 
 
 void motor_Init(void){
@@ -63,6 +66,19 @@ void motor_set_speed(int speed){
 	}
 
 	motor.last_speed=motor.speed;
+}
+
+//Courant de phase de U_Imes sur PA1
+//Courant de phase de V_Imes sur PB1
+//Courant de phase de W_Imes sur PB0
+
+void current_Mesure(void){
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	adc_value = HAL_ADC_GetValue(&hadc1);
+
+	sprintf(courant, "Courant : %d mA \r\n", adc_value);
+	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
 }
 
 void motor_PID_speed();
