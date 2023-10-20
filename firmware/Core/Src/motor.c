@@ -13,8 +13,12 @@
 #include <stdlib.h>
 #include "tim.h"
 
+#define ADC_BUF_SIZE 8
+
+
 Moteur motor;
 uint32_t adc_value = 0;
+uint16_t ADC_buffer [ADC_BUF_SIZE];
 char courant[50];
 
 
@@ -73,6 +77,7 @@ void motor_set_speed(int speed){
 //Courant de phase de W_Imes sur PB0
 
 void current_Mesure(void){
+	HAL_ADC_Start_DMA(&hadc1, ADC_buffer, ADC_BUF_SIZE);
 	HAL_ADC_Start(&hadc1);
 	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	adc_value = HAL_ADC_GetValue(&hadc1);

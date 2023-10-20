@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -93,6 +94,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC2_Init();
   MX_ADC1_Init();
   MX_TIM1_Init();
@@ -103,7 +105,8 @@ int main(void)
 	//HAL_UART_Transmit(&huart2, "___RESET___\r\n", 13, HAL_MAX_DELAY);
 
 	Shell_Init();
-
+	if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1))
+		Error_Handler();
   /* USER CODE END 2 */
 
   /* Infinite loop */
