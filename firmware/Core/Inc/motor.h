@@ -18,6 +18,7 @@ typedef struct Moteur{
 }Moteur;
 
 void motor_set_speed(int speed);
+void motor_Stop(void);
 void motor_Init(void);
 
 #endif /* SRC_MOTOR_H_ */

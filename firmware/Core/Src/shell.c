@@ -31,6 +31,7 @@ const uint8_t help[]="\r\nVoici les fonctions disponibles : \r\n"
 					"\r\n pinout : affiche toutes les broches connectees et leur fonction"
 					"\r\n start : allume l'etage de puissance du moteur"
 					"\r\n stop : eteint l'etage de puissance du moteur"
+					"\r\n La vitesse doit etre rentree entre -100 et 100"
 					"\r\n"
 					"\r\n"; //Contenant le message d'aide, la liste des fonctions
 const uint8_t pinout[]="\r\nVoici la liste des pin utilisees : \r\n"
@@ -54,7 +55,7 @@ const uint8_t powerOn[]="\r\nPower ON"
 const uint8_t powerOff[]="\r\nPower OFF"
 					"\r\n"
 					"\r\n"; //Contenant le message d'extinction du moteur
-const uint8_t speed[]="\r\nVitesse : "
+const uint8_t speed[]="\r\nLe moteur va atteindre la vitesse demandee. "
 					"\r\n"
 					"\r\n"; //en pourcentage
 
@@ -120,16 +121,16 @@ void Shell_Loop(void){
 			HAL_UART_Transmit(&huart2, pinout, sizeof(pinout), HAL_MAX_DELAY);
 		}
 		else if(strcmp(argv[0],"start")==0){
-					HAL_UART_Transmit(&huart2, powerOn, sizeof(powerOn), HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, powerOn, sizeof(powerOn), HAL_MAX_DELAY);
+			motor_Init();
 		}
 		else if(strcmp(argv[0],"stop")==0){
-					HAL_UART_Transmit(&huart2, powerOff, sizeof(powerOff), HAL_MAX_DELAY);
+			HAL_UART_Transmit(&huart2, powerOff, sizeof(powerOff), HAL_MAX_DELAY);
+			motor_Stop();
 		}
 		else if(strcmp(argv[0],"speed")==0){
-					HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
-					SpeedValue = atoi(argv[1]); //fonction détection de carac asciitointeger
-					Motor_Loop();
-					// appel de fonction de moteur.c
+			HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
+			motor_set_speed(atoi(argv[1]));
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);

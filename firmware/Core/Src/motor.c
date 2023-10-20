@@ -26,6 +26,18 @@ void motor_Init(void){
 
 	motor.state = STATE_ON;
 }
+
+void motor_Stop(void){
+	motor_set_speed(0);
+
+	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+	HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_1);
+	HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_2);
+
+	motor.state = STATE_OFF;
+}
+
 void motor_set_speed(int speed){
 	if(motor.state == STATE_OFF) motor_Init();
 	//entrer une valeur entre -100 et 100
