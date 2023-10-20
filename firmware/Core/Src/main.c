@@ -59,7 +59,9 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-int SpeedValue=0.5;
+
+//int SpeedValue=0.5;
+
 /* USER CODE END 0 */
 
 /**

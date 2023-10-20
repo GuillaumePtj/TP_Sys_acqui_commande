@@ -21,7 +21,7 @@ uint8_t newline[]="\r\n"; //Contenant la chaine de caractère pour faire un reto
 uint8_t backspace[]="\b \b";
 uint8_t cmdNotFound[]="Command not found\r\n"; //Contenant le message du commande non reconnue
 uint8_t brian[]="Brian is in the kitchen\r\n";
-uint8_t uartRxReceived; //Flag de récéption d'un caractère sur la liaison uart
+uint8_t uartRxReceived = 0; //Flag de récéption d'un caractère sur la liaison uart
 uint8_t uartRxBuffer[UART_RX_BUFFER_SIZE]; //buffer de réception de donnée de l'uart
 uint8_t uartTxBuffer[UART_TX_BUFFER_SIZE]; //buffer d'émission des données de l'uart
 
@@ -54,7 +54,7 @@ const uint8_t powerOn[]="\r\nPower ON"
 const uint8_t powerOff[]="\r\nPower OFF"
 					"\r\n"
 					"\r\n"; //Contenant le message d'extinction du moteur
-const uint8_t speed[]="\r\nLe moteur va tourner a la vitesse demandee"
+const uint8_t speed[]="\r\nVitesse : "
 					"\r\n"
 					"\r\n"; //en pourcentage
 
@@ -66,6 +66,7 @@ int		 	argc = 0;
 char*		token;
 int 		newCmdReady = 0;
 int 		Speed_Value;
+float       duty_rapport = 0;
 
 
 void Shell_Init(void){

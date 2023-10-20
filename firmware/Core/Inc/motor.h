@@ -5,12 +5,19 @@
  *      Author: grego
  */
 
-#ifndef INC_MOTOR_H_
-#define INC_MOTOR_H_
+#ifndef SRC_MOTOR_H_
+#define SRC_MOTOR_H_
 
+#define STATE_ON 1
+#define STATE_OFF 0
 
-int verifSpeed (int a);
-int Motor_Loop(void);
-extern int SpeedValue;
+typedef struct Moteur{
+	int state;
+	int speed;
+	int last_speed;
+}Moteur;
 
-#endif /* INC_MOTOR_H_ */
+void motor_set_speed(int speed);
+void motor_Init(void);
+
+#endif /* SRC_MOTOR_H_ */
