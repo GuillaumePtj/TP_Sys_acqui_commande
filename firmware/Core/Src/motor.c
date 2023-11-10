@@ -18,8 +18,10 @@
 
 Moteur motor;
 uint32_t adc_value = 0;
+uint32_t pwm_duty_cycle = 0;
 uint16_t ADC_buffer [ADC_BUF_SIZE];
 char courant[50];
+char vitesse[50];
 
 
 void motor_Init(void){
@@ -84,6 +86,19 @@ void current_Mesure(void){
 
 	sprintf(courant, "Courant : %d mA \r\n", adc_value);
 	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
+}
+
+//Mesure de l'encodeur A sur PA6
+//Mesure de l'encodeur B sur PA4
+//Mesure de l'endodeur Z sur PC8
+extern float pwm_frequency;
+extern uint32_t counter_difference;
+
+void speed_Mesure(void){
+
+	//pwm_duty_cycle = __HAL_TIM_GET_COMPARE(&htim3, TIM_CHANNEL_3);
+	sprintf(vitesse, "Vitesse : %d rpm \r\n", counter_difference);
+	HAL_UART_Transmit(&huart2, (uint8_t *)vitesse, strlen(vitesse), HAL_MAX_DELAY);
 }
 
 void motor_PID_speed();

@@ -31,7 +31,8 @@ const uint8_t help[]="\r\nVoici les fonctions disponibles : \r\n"
 					"\r\n pinout : affiche toutes les broches connectees et leur fonction"
 					"\r\n start : allume l'etage de puissance du moteur"
 					"\r\n stop : eteint l'etage de puissance du moteur"
-					"\r\n La vitesse doit etre rentree entre -100 et 100"
+					"\r\n speed XXX : La vitesse doit etre rentree entre -100 et 100"
+					"\r\n current : affiche la valeur du courant"
 					"\r\n"
 					"\r\n"; //Contenant le message d'aide, la liste des fonctions
 const uint8_t pinout[]="\r\nVoici la liste des pin utilisees : \r\n"
@@ -139,6 +140,13 @@ void Shell_Loop(void){
 			HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
 
 			motor_set_speed(atoi(argv[1]));
+		}
+		else if(strcmp(argv[0],"vitesse")==0){
+					//HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
+					//sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
+					//HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+
+					speed_Mesure();
 		}
 		else if(strcmp(argv[0],"current")==0){
 			current_Mesure();
