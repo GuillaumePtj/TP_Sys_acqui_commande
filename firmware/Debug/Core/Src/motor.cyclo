@@ -2,4 +2,4 @@
 ../Core/Src/motor.c:38:6:motor_Stop	1
 ../Core/Src/motor.c:49:6:motor_set_speed	8
 ../Core/Src/motor.c:80:6:current_Mesure	1
-../Core/Src/motor.c:99:6:speed_Mesure	1
+../Core/Src/motor.c:101:6:speed_Mesure	2

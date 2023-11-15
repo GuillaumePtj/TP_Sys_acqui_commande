@@ -14,9 +14,9 @@
 
 uint8_t prompt[]="user@Nucleo-STM32G474RET6>>"; //Contenant le prompt comme sur un shell linux
 uint8_t started[]=
-		"\r\n*-----------------------------*"
-		"\r\n| Welcome on Nucleo-STM32G474 |"
-		"\r\n*-----------------------------*"
+		"\r\n \t *-----------------------------*"
+		"\r\n \t | Welcome on Nucleo-STM32G474 |"
+		"\r\n \t *-----------------------------*"
 		"\r\n"; //Contenant un message de bienvenue au démarrage du microprocesseur
 uint8_t newline[]="\r\n"; //Contenant la chaine de caractère pour faire un retour à la ligne
 uint8_t backspace[]="\b \b";
@@ -51,10 +51,10 @@ const uint8_t pinout[]="\r\nVoici la liste des pin utilisees : \r\n"
 					"\r\n - PA1 : U_Imes"
 					"\r\n"
 					"\r\n"; //Contenant la liste des pin utilisées
-const uint8_t powerOn[]="\r\nPower ON"
+const uint8_t powerOn[]="\r\n \t Power ON"
 					"\r\n"
 					"\r\n"; //Contenant le message d'allumage du moteur
-const uint8_t powerOff[]="\r\nPower OFF"
+const uint8_t powerOff[]="\r\n \t Power OFF"
 					"\r\n"
 					"\r\n"; //Contenant le message d'extinction du moteur
 const uint8_t speed[]="\r\nLe moteur va atteindre la vitesse demandee. "

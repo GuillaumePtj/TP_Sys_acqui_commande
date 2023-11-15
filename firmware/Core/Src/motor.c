@@ -83,6 +83,8 @@ void current_Mesure(void){
 	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
 	adc_value = HAL_ADC_GetValue(&hadc1);
 
+
+
 	sprintf(courant, "Courant : %d mA \r\n", adc_value);
 	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
 }
@@ -97,7 +99,8 @@ uint32_t frequence;
 char vitesse[50];
 
 void speed_Mesure(void){
-	while(1){
+	int i = 0;
+	for(i=0;i<50;i++){
 		raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
 		HAL_Delay(10);
 		new_raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
@@ -105,7 +108,6 @@ void speed_Mesure(void){
 		sprintf(vitesse, "Vitesse : %d rpm \r\n", frequence);
 		HAL_UART_Transmit(&huart2, (uint8_t *)vitesse, strlen(vitesse), HAL_MAX_DELAY);
 	}
-
 }
 
 void motor_PID_speed();

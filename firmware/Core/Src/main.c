@@ -101,7 +101,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start(&htim3);
-	Shell_Init();
+  Shell_Init();
 
 	//if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1))
 		//Error_Handler();
