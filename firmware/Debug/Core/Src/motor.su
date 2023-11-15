@@ -1,5 +1,5 @@
-../Core/Src/motor.c:27:6:motor_Init	8	static
-../Core/Src/motor.c:39:6:motor_Stop	8	static
-../Core/Src/motor.c:50:6:motor_set_speed	24	static
-../Core/Src/motor.c:81:6:current_Mesure	8	static
-../Core/Src/motor.c:97:6:speed_Mesure	8	static
+../Core/Src/motor.c:26:6:motor_Init	8	static
+../Core/Src/motor.c:38:6:motor_Stop	8	static
+../Core/Src/motor.c:49:6:motor_set_speed	24	static
+../Core/Src/motor.c:80:6:current_Mesure	8	static
+../Core/Src/motor.c:99:6:speed_Mesure	8	static

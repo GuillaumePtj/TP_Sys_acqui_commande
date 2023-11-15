@@ -48,7 +48,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -100,18 +99,23 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
-	HAL_TIM_Encoder_Init(&htim3, TIM_CHANNEL_1);
-	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_1);
+
+  HAL_TIM_Base_Start(&htim3);
 	Shell_Init();
+
 	//if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1))
 		//Error_Handler();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
+
+
 		Shell_Loop();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -167,10 +171,6 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 
-uint32_t last_counter_value = 0;
-float pwm_frequency;
-uint32_t counter_difference;
-
 /* USER CODE END 4 */
 
 /**
@@ -185,17 +185,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
 	if (htim->Instance == TIM3) {
-		// Obtenez la valeur actuelle du compteur sur le canal 1
-		uint32_t current_counter_value = __HAL_TIM_GET_COUNTER(&htim3);
 
-		// Mesurez le temps écoulé depuis la dernière capture
-		counter_difference = current_counter_value - last_counter_value;
-
-		// Mettez à jour la dernière valeur du compteur
-		last_counter_value = current_counter_value;
-
-		// Calculez la fréquence (si counter_difference est non nul)
-		pwm_frequency = HAL_RCC_GetHCLKFreq() / counter_difference;
 	}
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {

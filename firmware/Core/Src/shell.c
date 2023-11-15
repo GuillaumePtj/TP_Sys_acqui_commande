@@ -10,6 +10,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "motor.h"
+#include "tim.h"
 
 uint8_t prompt[]="user@Nucleo-STM32G474RET6>>"; //Contenant le prompt comme sur un shell linux
 uint8_t started[]=
@@ -73,6 +74,7 @@ int 		newCmdReady = 0;
 int 		Speed_Value;
 float       duty_rapport = 0;
 char 		message[50];
+int 		freq=0;
 
 
 
@@ -142,11 +144,12 @@ void Shell_Loop(void){
 			motor_set_speed(atoi(argv[1]));
 		}
 		else if(strcmp(argv[0],"vitesse")==0){
-					//HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
-					//sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
-					//HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
+			//HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
+			//freq = HAL_TIM_Encoder_GetState(&htim3);
+			//sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
+			//HAL_UART_Transmit(&huart2, (uint8_t *)freq, 8, HAL_MAX_DELAY);
 
-					speed_Mesure();
+			speed_Mesure();
 		}
 		else if(strcmp(argv[0],"current")==0){
 			current_Mesure();
