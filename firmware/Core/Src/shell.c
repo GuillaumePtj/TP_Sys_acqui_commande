@@ -32,7 +32,8 @@ const uint8_t help[]="\r\nVoici les fonctions disponibles : \r\n"
 					"\r\n pinout : affiche toutes les broches connectees et leur fonction"
 					"\r\n start : allume l'etage de puissance du moteur"
 					"\r\n stop : eteint l'etage de puissance du moteur"
-					"\r\n speed XXX : La vitesse doit etre rentree entre -100 et 100"
+					"\r\n speed XXX : La vitesse doit etre rentree entre -3000 et 3000"
+					"\r\n vitesse : affiche la valeur de la vitesse de rotation du moteur"
 					"\r\n current : affiche la valeur du courant"
 					"\r\n"
 					"\r\n"; //Contenant le message d'aide, la liste des fonctions
@@ -138,17 +139,13 @@ void Shell_Loop(void){
 		}
 		else if(strcmp(argv[0],"speed")==0){
 			HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
-			sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
+			sprintf(message, "Vitesse demandee : %d tour/minute \r\n \r\n", atoi(argv[1]));
 			HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
 
+			//convertir la valeur de vitesse pour être entre -100 et 100 pour une valeur entré entre -3000 et 3000
 			motor_set_speed(atoi(argv[1]));
 		}
 		else if(strcmp(argv[0],"vitesse")==0){
-			//HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
-			//freq = HAL_TIM_Encoder_GetState(&htim3);
-			//sprintf(message, "Vitesse : %d tour/minute \r\n \r\n", atoi(argv[1])*30);
-			//HAL_UART_Transmit(&huart2, (uint8_t *)freq, 8, HAL_MAX_DELAY);
-
 			speed_Mesure();
 		}
 		else if(strcmp(argv[0],"current")==0){

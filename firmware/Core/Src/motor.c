@@ -13,15 +13,7 @@
 #include <stdlib.h>
 #include "tim.h"
 
-#define ADC_BUF_SIZE 8
-
-
 Moteur motor;
-uint32_t adc_value = 0;
-uint16_t ADC_buffer [ADC_BUF_SIZE];
-char courant[50];
-
-
 
 void motor_Init(void){
 
@@ -48,7 +40,9 @@ void motor_Stop(void){
 
 void motor_set_speed(int speed){
 	if(motor.state == STATE_OFF) motor_Init();
-	//entrer une valeur entre -100 et 100
+	//entrer une valeur entre -3000 et 3000
+
+	speed = speed/30; //convertit en valeur entre -100 et 100
 
 	if(speed>100) speed=100;
 	if(speed<-100) speed=-100;
@@ -73,21 +67,46 @@ void motor_set_speed(int speed){
 	motor.last_speed=motor.speed;
 }
 
+/*Mesure du courant*/
+
 //Courant de phase de U_Imes sur PA1
 //Courant de phase de V_Imes sur PB1
 //Courant de phase de W_Imes sur PB0
 
-void current_Mesure(void){
-	HAL_ADC_Start_DMA(&hadc1, ADC_buffer, ADC_BUF_SIZE);
-	HAL_ADC_Start(&hadc1);
-	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	adc_value = HAL_ADC_GetValue(&hadc1);
+uint32_t adc_value = 0;
+uint16_t ADC_buffer;// [ADC_BUF_SIZE];
+char courant[50];
 
+void current_Init(void)
+{
+	if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED))
+	{
+		HAL_UART_Transmit(&huart2,"\t Erreur de calibration \r\n", 30, HAL_MAX_DELAY);
+	}
+	if (HAL_OK != HAL_ADC_Start_DMA(&hadc1, &ADC_buffer, 1))
+	{
+		HAL_UART_Transmit(&huart2,"\t Erreur de DMA \r\n", 25, HAL_MAX_DELAY);
+	}
 
-
-	sprintf(courant, "Courant : %d mA \r\n", adc_value);
-	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
+	HAL_TIM_Base_Start(&htim1);
 }
+
+float current_Mesure(void){
+	//Fonction de transfert du capteur
+	// I = (1/Sn)(3300*Vm/4095 - V0)
+		//avec Sn la sensibilité nominale 50 mv/A
+		// Vm la valeur de la tension mesurée
+		// V0 la tension d'alimentation 3.3/2 V
+
+	float courant_A = 0.016*ADC_buffer -33;
+
+	sprintf(courant, "Courant : %d et %f A \r\n", ADC_buffer, courant_A);
+	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
+	return courant_A;
+}
+
+
+/*Mesure de la vitesse*/
 
 //Mesure de l'encodeur A sur PA6
 //Mesure de l'encodeur B sur PA4
@@ -98,21 +117,41 @@ uint32_t new_raw_speed;
 uint32_t frequence;
 char vitesse[50];
 
-void speed_Mesure(void){
-	int i = 0;
-	for(i=0;i<50;i++){
-		raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
-		HAL_Delay(10);
-		new_raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
-		frequence = (new_raw_speed - raw_speed)*735/495;
+uint32_t speed_Mesure(void){
+	raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
+	HAL_Delay(10);
+	new_raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
+	frequence = (new_raw_speed - raw_speed)*735/495;
+
+	if(frequence < 5000)
+	{
+		sprintf(vitesse, "Vitesse : %d rpm \r\n", -frequence);
+		HAL_UART_Transmit(&huart2, (uint8_t *)vitesse, strlen(vitesse), HAL_MAX_DELAY);
+	}
+	else
+	{
+		frequence = -(new_raw_speed - raw_speed)*735/495;
 		sprintf(vitesse, "Vitesse : %d rpm \r\n", frequence);
 		HAL_UART_Transmit(&huart2, (uint8_t *)vitesse, strlen(vitesse), HAL_MAX_DELAY);
 	}
+	return frequence;
 }
 
-void motor_PID_speed();
+/* Asservissement de vitesse */
 
-void motor_PID_current();
+uint32_t PID_speed(int speed_command)
+{
+	int speed = speed_Mesure();
+	int error = speed_command - speed;
 
+	//P+I.Ts/(z-1) avec P = 0.305 et I = 0.064
+	int P_speed = 0.305;
+	int I_speed = 0.064;
+	int Ts = 1/100;
+
+	int sortie;
+	sortie = P_speed + I_speed.Ts/(error-1);
+	return sortie;
+}
 
 

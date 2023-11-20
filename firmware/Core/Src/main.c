@@ -39,7 +39,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-//#define ADC_BUF_SIZE 8
+extern uint16_t ADC_buffer;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -48,6 +48,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -100,7 +101,9 @@ int main(void)
   MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_Base_Start(&htim3);
+  HAL_TIM_Base_Start(&htim3); // pour la mesure de la vitesse
+  current_Init();
+
   Shell_Init();
 
 	//if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1))
@@ -112,8 +115,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 	while (1)
 	{
-
-
 		Shell_Loop();
 
     /* USER CODE END WHILE */
