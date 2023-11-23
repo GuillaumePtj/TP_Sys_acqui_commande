@@ -18,12 +18,12 @@ De plus, nous introduisons un temps mort à chaque commutation de transistors af
 
 ## 3) Acquisition de courant et de vitesse 
 
-- Mesure du courant
+- Mesure du courant :
 Nous cherchons à mesurer le courant dans une des phases du moteur, sachant qu'il est l'opposé dans la deuxième phase.
 Pour une bonne utilisation du capteur, nous l'initialisons dans la fonction "Current_Init".
 Puis nous appliquons la fonction de transfert du capteur : I = (1/Sn)(3300*Vm/4095 - V0) afin de pouvoir exploiter la valeur du capteur.
 
-- Mesure de la vitesse
+- Mesure de la vitesse :
 Pour mesurer la vitesse de rotation du moteur, nous mesurons le nombre de fronts montants de l'encodeur rotatif monté sur la maquette pendant 10ms.
 Ainsi, nous sommes en mesure de mesurer la fréquence du signal provenant de l'encodeur.
 
