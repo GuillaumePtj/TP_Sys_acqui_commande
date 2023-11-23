@@ -80,10 +80,10 @@ int 		freq=0;
 
 
 void Shell_Init(void){
-	memset(argv, NULL, MAX_ARGS*sizeof(char*));
-	memset(cmdBuffer, NULL, CMD_BUFFER_SIZE*sizeof(char));
-	memset(uartRxBuffer, NULL, UART_RX_BUFFER_SIZE*sizeof(char));
-	memset(uartTxBuffer, NULL, UART_TX_BUFFER_SIZE*sizeof(char));
+	memset(argv, 0, MAX_ARGS*sizeof(char*));
+	memset(cmdBuffer, 0, CMD_BUFFER_SIZE*sizeof(char));
+	memset(uartRxBuffer, 0, UART_RX_BUFFER_SIZE*sizeof(char));
+	memset(uartTxBuffer, 0, UART_TX_BUFFER_SIZE*sizeof(char));
 
 	HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
 	HAL_UART_Transmit(&huart2, started, strlen((char *)started), HAL_MAX_DELAY);
@@ -131,11 +131,11 @@ void Shell_Loop(void){
 		}
 		else if(strcmp(argv[0],"start")==0){
 			HAL_UART_Transmit(&huart2, powerOn, sizeof(powerOn), HAL_MAX_DELAY);
-			motor_Init();
+			Motor_Init();
 		}
 		else if(strcmp(argv[0],"stop")==0){
 			HAL_UART_Transmit(&huart2, powerOff, sizeof(powerOff), HAL_MAX_DELAY);
-			motor_Stop();
+			Motor_Stop();
 		}
 		else if(strcmp(argv[0],"speed")==0){
 			HAL_UART_Transmit(&huart2, speed, sizeof(speed), HAL_MAX_DELAY);
@@ -143,13 +143,13 @@ void Shell_Loop(void){
 			HAL_UART_Transmit(&huart2, (uint8_t *)message, strlen(message), HAL_MAX_DELAY);
 
 			//convertir la valeur de vitesse pour être entre -100 et 100 pour une valeur entré entre -3000 et 3000
-			motor_set_speed(atoi(argv[1]));
+			Motor_Set_Speed(atoi(argv[1]));
 		}
 		else if(strcmp(argv[0],"vitesse")==0){
-			speed_Mesure();
+			Speed_Mesure();
 		}
 		else if(strcmp(argv[0],"current")==0){
-			current_Mesure();
+			Current_Mesure();
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);

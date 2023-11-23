@@ -15,20 +15,22 @@
 
 Moteur motor;
 
-void motor_Init(void){
+void Motor_Init(void)
+{
 
 	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
 	HAL_TIMEx_PWMN_Start(&htim1,TIM_CHANNEL_1);
 	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_2);
 	HAL_TIMEx_PWMN_Start(&htim1,TIM_CHANNEL_2);
-	motor.last_speed=512;
 
+	motor.last_speed=ZERO_MOTOR_SPEED;
 
 	motor.state = STATE_ON;
 }
 
-void motor_Stop(void){
-	motor_set_speed(0);
+void Motor_Stop(void)
+{
+	Motor_Set_Speed(0);
 
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
@@ -38,8 +40,8 @@ void motor_Stop(void){
 	motor.state = STATE_OFF;
 }
 
-void motor_set_speed(int speed){
-	if(motor.state == STATE_OFF) motor_Init();
+void Motor_Set_Speed(int speed){
+	if(motor.state == STATE_OFF) Motor_Init();
 	//entrer une valeur entre -3000 et 3000
 
 	speed = speed/30; //convertit en valeur entre -100 et 100
@@ -47,7 +49,7 @@ void motor_set_speed(int speed){
 	if(speed>100) speed=100;
 	if(speed<-100) speed=-100;
 
-	motor.speed=(int)speed*5.12+512;
+	motor.speed=(int)speed*ZERO_MOTOR_SPEED/100+ZERO_MOTOR_SPEED; //pour convertir la valeur entre 0 et 1024 pour correspondre au timer
 
 	if(motor.last_speed<motor.speed){
 		for (int i = motor.last_speed; i<=motor.speed; i++){
@@ -73,34 +75,34 @@ void motor_set_speed(int speed){
 //Courant de phase de V_Imes sur PB1
 //Courant de phase de W_Imes sur PB0
 
-uint32_t adc_value = 0;
-uint16_t ADC_buffer;// [ADC_BUF_SIZE];
+uint32_t conversionCount = 1;
+uint16_t adcBuffer[1];
 char courant[50];
 
-void current_Init(void)
+void Current_Init(void)
 {
 	if (HAL_OK != HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED))
 	{
-		HAL_UART_Transmit(&huart2,"\t Erreur de calibration \r\n", 30, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart2, (uint8_t *) "\t Erreur de calibration \r\n", 30, HAL_MAX_DELAY);
 	}
-	if (HAL_OK != HAL_ADC_Start_DMA(&hadc1, &ADC_buffer, 1))
+	if (HAL_OK != HAL_ADC_Start_DMA(&hadc1, (uint32_t*) adcBuffer, conversionCount))
 	{
-		HAL_UART_Transmit(&huart2,"\t Erreur de DMA \r\n", 25, HAL_MAX_DELAY);
+		HAL_UART_Transmit(&huart2, (uint8_t *) "\t Erreur de DMA \r\n", 25, HAL_MAX_DELAY);
 	}
 
 	HAL_TIM_Base_Start(&htim1);
 }
 
-float current_Mesure(void){
+float Current_Mesure(void){
 	//Fonction de transfert du capteur
 	// I = (1/Sn)(3300*Vm/4095 - V0)
 		//avec Sn la sensibilité nominale 50 mv/A
 		// Vm la valeur de la tension mesurée
 		// V0 la tension d'alimentation 3.3/2 V
 
-	float courant_A = 0.016*ADC_buffer -33;
+	float courant_A = 0.016*adcBuffer[0] -33;
 
-	sprintf(courant, "Courant : %d et %f A \r\n", ADC_buffer, courant_A);
+	sprintf(courant, "Courant : %d et %f A \r\n", adcBuffer[0], courant_A);
 	HAL_UART_Transmit(&huart2, (uint8_t *)courant, strlen(courant), HAL_MAX_DELAY);
 	return courant_A;
 }
@@ -114,10 +116,10 @@ float current_Mesure(void){
 
 uint32_t raw_speed;
 uint32_t new_raw_speed;
-uint32_t frequence;
+int frequence;
 char vitesse[50];
 
-uint32_t speed_Mesure(void){
+uint32_t Speed_Mesure(void){
 	raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
 	HAL_Delay(10);
 	new_raw_speed = __HAL_TIM_GET_COUNTER(&htim3);
@@ -139,7 +141,7 @@ uint32_t speed_Mesure(void){
 
 /* Asservissement de vitesse */
 
-uint32_t PID_speed(int speed_command)
+/*uint32_t PID_Speed(int speed_command)
 {
 	int speed = speed_Mesure();
 	int error = speed_command - speed;
@@ -152,6 +154,6 @@ uint32_t PID_speed(int speed_command)
 	int sortie;
 	sortie = P_speed + I_speed.Ts/(error-1);
 	return sortie;
-}
+}*/
 
 
